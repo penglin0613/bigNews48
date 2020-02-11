@@ -58,8 +58,8 @@
         //入口函数
         $(function(){
 
-            //一进到首页,就发送ajax请求,获取个人信息
-            //一:使用jQuery来发送ajax请求. 
+            //一:一进到首页,就发送ajax请求,获取个人信息
+            //使用jQuery来发送ajax请求. 
             $.ajax({
                 type:'get',
                 // 这里就是把token令牌带过去. 
@@ -76,12 +76,8 @@
                 }
             });
 
-            
-
-
-
-            //一进到首页,就发送ajax请求,获取个人信息
-            //二:原生js发送ajax请求,如何带token过去
+            //一:一进到首页,就发送ajax请求,获取个人信息
+            //原生js发送ajax请求,如何带token过去
             // var xhr = new XMLHttpRequest();
             // xhr.open('get','http://localhost:8080/api/v1/admin/user/info');
             // //把存放在localStorage中的token令牌取出来,通过请求头的方式发给后端接口
@@ -90,6 +86,17 @@
             //     console.log(xhr.response); //原生的是使用xhr.response.
             // }
             // xhr.send();
+
+
+            //二:退出
+            //退出实际上就是删除token就ok. 
+            $('.logout').on('click',function(e){
+                e.preventDefault();//阻止a标签的默认跳转. 
+                //删除token. 
+                localStorage.removeItem('token');
+                //回到登录页. 
+                window.location.href = './login.html';
+            })
 
 
 
