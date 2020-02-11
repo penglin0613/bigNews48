@@ -57,7 +57,8 @@
     </div>
   </div>
 
-
+  <!-- 引入了http.js文件,那这个自执行函数就会执行,那window中就有了一个BigNew对象 -->
+  <script src="./libs/http.js"></script>
   <script>
     //入口函数
     $(function () {
@@ -82,7 +83,7 @@
         //3.发送ajax请求,完成登录
         $.ajax({
           type: 'post',
-          url: 'http://localhost:8080/api/v1/admin/user/login',
+          url: BigNew.user_login,
           data: {
             username: username,
             password: password
