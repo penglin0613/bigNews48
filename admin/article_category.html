@@ -100,19 +100,22 @@
     <script>
         //入口函数
         $(function () {
-            //一: 一进到文章类别管理页面,就发送ajax请求,获取所有的文章类别. 
-            $.ajax({
-                type: 'get',
-                url: BigNew.category_list,
-                success: function (backData) {
-                    //console.log(backData);
-                    if (backData.code == 200) {
-                        //通过模板引擎渲染到页面上. 
-                        var resHtml = template('article_cate_temp', backData);
-                        $('tbody').html(resHtml);
+            //一: 一进到文章类别管理页面,就发送ajax请求,获取所有的文章类别.
+            getData(); 
+            function getData() {
+                $.ajax({
+                    type: 'get',
+                    url: BigNew.category_list,
+                    success: function (backData) {
+                        //console.log(backData);
+                        if (backData.code == 200) {
+                            //通过模板引擎渲染到页面上. 
+                            var resHtml = template('article_cate_temp', backData);
+                            $('tbody').html(resHtml);
+                        }
                     }
-                }
-            });
+                });
+            }
 
             //二:到底是新增分类按钮 / 编辑按钮 来弹出的模态框
             //show.bs.modal	  show 方法调用之后立即触发该事件。
@@ -121,16 +124,50 @@
             $('#myModal').on('show.bs.modal', function (e) {
                 //console.log(e.relatedTarget);
                 //判断
-                if(e.relatedTarget == $('#xinzengfenlei')[0]){
+                if (e.relatedTarget == $('#xinzengfenlei')[0]) {
                     //alert('新增');
                     $('#myModalLabel').text('新增分类');
                     $('#btnAddOrEdit').text('新增').addClass('btn-primary').removeClass('btn-success');
-                }else{
+                } else {
                     //alert('编辑');
                     $('#myModalLabel').text('编辑分类');
                     $('#btnAddOrEdit').text('编辑').addClass('btn-success').removeClass('btn-primary');
                 }
             })
+
+            //三:给模态框中的 新增/编辑  按钮设置点击事件. 
+            $('#btnAddOrEdit').on('click', function () {
+                //判断 你点的这个按钮是新增还是编辑. 
+                if ($(this).hasClass('btn-primary')) {
+                    //拥有btn-primary类就是新增
+                    //获取用户新增的 分类名称和分类别名
+                    var categoreName = $('#recipient-name').val().trim();
+                    var categoreSlug = $('#message-text').val().trim();
+                    //发送ajax请求完成新增
+                    $.ajax({
+                        type: 'post',
+                        url: BigNew.category_add,
+                        data: {
+                            name: categoreName,
+                            slug: categoreSlug
+                        },
+                        success: function (backData) {
+                            //console.log(backData);
+                            if (backData.code == 201) {
+                                //新增成功,就应该隐藏模态框,以及重新加载数据
+                                $('#myModal').modal('hide')
+                                getData();
+                                //清空输入框
+                                $('#recipient-name').val("");
+                                $('#message-text').val("");
+                            }
+                        }
+                    });
+                } else {
+                    //那到这里了就是编辑
+                }
+            })
+
 
         })
     </script>
