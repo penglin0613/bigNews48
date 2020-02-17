@@ -278,6 +278,15 @@
         {{/each}}
     </script>
 
+
+
+    <!-- 六: 文章类别 -->
+    <script id="category_temp" type="text/html">
+        {{each data v}}
+        <li><a href="./list.html?id={{v.id}}">{{v.name}}</a></li>
+        {{/each}}
+    </script>
+
     <script>
         //入口函数
         $(function () {
@@ -350,6 +359,34 @@
             });
 
 
+            //六: 文章类别
+            $.ajax({
+                url:'http://localhost:8080/api/v1/index/category',
+                success:function(backData){
+                    //console.log(backData);
+                    if(backData.code == 200){
+                       var resHtml = template('category_temp',backData);
+                       //竖着显示的文章类别
+                       $('ul.level_two').html('<li class="up"></li>'+resHtml);
+                       //横着显示的文章类别
+                       $('ul.left_menu.fl').html(resHtml);
+                    }
+                }
+            });
+
+            //七:文章搜索
+            //给搜索按钮设置一个点击事件,把用户要搜索的内容传到list.html页面
+            $('.search_btn').on('click',function(){
+                //获取文本输入框中的内容
+                var searchTxt = $('.search_txt').val().trim();
+                //非空判断
+                if(searchTxt == ""){
+                    alert('搜索内容不能为空!');
+                    return;
+                }else {
+                    window.location.href = './list.html?search='+searchTxt
+                }
+            })
 
         })
     </script>
